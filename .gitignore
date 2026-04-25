@@ -62,3 +62,6 @@ docs/_build/
 
 # Hatch
 .hatch/
+
+# Internal planning docs
+plans/
