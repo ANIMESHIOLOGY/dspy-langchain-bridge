@@ -10,6 +10,7 @@ Bridge 5: ``DSPyRetriever`` — expose a DSPy ``Retrieve`` module as a
 from __future__ import annotations
 
 import asyncio
+import inspect
 from typing import Any, List, Optional, Union
 
 
@@ -110,7 +111,9 @@ class LangChainRetriever:
 
         passages: List[str] = []
         for query in queries:
-            if hasattr(self._retriever, "ainvoke"):
+            if hasattr(self._retriever, "ainvoke") and inspect.iscoroutinefunction(
+                self._retriever.ainvoke
+            ):
                 docs = await self._retriever.ainvoke(query)
             else:
                 loop = asyncio.get_event_loop()

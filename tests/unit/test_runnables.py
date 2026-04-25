@@ -50,7 +50,7 @@ def test_invoke_returns_dict(simple_dspy_module):
 def test_invoke_calls_module_with_kwargs(simple_dspy_module):
     runnable = DSPyRunnable(simple_dspy_module)
     runnable.invoke({"question": "Hello?"})
-    simple_dspy_module.__call__.assert_called_once_with(question="Hello?")
+    simple_dspy_module.assert_called_once_with(question="Hello?")
 
 
 def test_invoke_accepts_aimessage_like_input(simple_dspy_module):

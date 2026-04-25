@@ -52,7 +52,7 @@ def test_dspy_tool_run_json_input(simple_dspy_module, mock_dspy_prediction):
     tool = DSPyTool(simple_dspy_module, input_key="question", output_key="answer")
     result = tool._run(json.dumps({"question": "What is the capital?"}))
     # The module was called with the parsed dict
-    simple_dspy_module.__call__.assert_called_with(question="What is the capital?")
+    simple_dspy_module.assert_called_with(question="What is the capital?")
 
 
 def test_dspy_tool_run_returns_string(simple_dspy_module):
@@ -104,16 +104,13 @@ def test_langchain_tool_call_via_invoke():
 
 @pytest.mark.asyncio
 async def test_langchain_tool_acall(mock_lc_tool):
-    mock_lc_tool.arun = MagicMock(return_value="async result")
-    # Make arun awaitable
-    import asyncio as _asyncio
+    from unittest.mock import AsyncMock
 
-    mock_lc_tool.arun = MagicMock(
-        return_value=_asyncio.coroutine(lambda *a, **k: "async result")()
-    )
+    mock_lc_tool.arun = AsyncMock(return_value="async result")
     tool = LangChainTool(mock_lc_tool)
     result = await tool.acall("query")
     assert isinstance(result, str)
+    assert result == "async result"
 
 
 def test_langchain_tool_repr(mock_lc_tool):
@@ -146,7 +143,7 @@ def test_dspy_node_with_input_map(simple_dspy_module, mock_dspy_prediction):
     )
     state = {"user_query": "Tell me about Paris"}
     result = node_fn(state)
-    simple_dspy_module.__call__.assert_called_with(question="Tell me about Paris")
+    simple_dspy_module.assert_called_with(question="Tell me about Paris")
 
 
 def test_dspy_node_with_output_map(simple_dspy_module, mock_dspy_prediction):

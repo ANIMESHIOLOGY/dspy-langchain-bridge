@@ -70,11 +70,7 @@ def test_prompt_module_named_predictors():
 def test_normalize_trainset_dicts():
     sig = make_sig_mock(["question"], ["answer"])
     examples = [{"question": "Q?", "answer": "A."}]
-    with patch("dspy.Example") as mock_example_cls:
-        mock_ex = MagicMock()
-        mock_ex.with_inputs = MagicMock(return_value=mock_ex)
-        mock_example_cls.return_value = mock_ex
-        result = _normalize_trainset(examples, sig)
+    result = _normalize_trainset(examples, sig)
     assert len(result) == 1
 
 
@@ -177,11 +173,7 @@ def test_optimize_langchain_prompt_returns_chat_template():
 
     trainset = [{"question": "What is 2+2?", "answer": "4"}]
 
-    with patch("dspy.Example") as mock_ex_cls, patch("dspy.Predict"):
-        mock_ex = MagicMock(spec=dspy.Example)
-        mock_ex.with_inputs = MagicMock(return_value=mock_ex)
-        mock_ex_cls.return_value = mock_ex
-
+    with patch("dspy_lc_bridge.optimizers.dspy.Predict"):
         result = optimize_langchain_prompt(
             prompt=original,
             optimizer=optimizer,

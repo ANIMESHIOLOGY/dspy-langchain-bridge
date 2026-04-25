@@ -105,7 +105,8 @@ def test_usage_metadata(mock_chat_llm):
 
 
 def test_repr_chat_model(mock_chat_llm):
-    lm = LangChainLM(mock_chat_llm)
+    with patch.object(LangChainLM, "_detect_chat_model", return_value=True):
+        lm = LangChainLM(mock_chat_llm)
     assert "LangChainLM" in repr(lm)
     assert "is_chat=True" in repr(lm)
 

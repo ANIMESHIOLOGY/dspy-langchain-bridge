@@ -47,6 +47,9 @@ def test_langchain_retriever_repr(mock_lc_retriever):
 
 @pytest.mark.asyncio
 async def test_langchain_retriever_acall(mock_lc_retriever):
+    from unittest.mock import AsyncMock
+
+    mock_lc_retriever.ainvoke = AsyncMock(return_value=mock_lc_retriever.invoke.return_value)
     retriever = LangChainRetriever(mock_lc_retriever, k=2)
     pred = await retriever.acall("async query", k=2)
     assert hasattr(pred, "passages")

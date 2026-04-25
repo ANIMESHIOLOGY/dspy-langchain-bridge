@@ -11,6 +11,8 @@ from __future__ import annotations
 
 from typing import Any, Callable, Dict, List, Optional, Union
 
+import dspy
+
 from dspy_lc_bridge._types import MetricFn, TrainExample
 
 
@@ -67,8 +69,6 @@ def optimize_langchain_prompt(
         ...     trainset=my_examples,
         ... )
     """
-    import dspy
-
     if output_fields is None:
         output_fields = ["answer"]
 
@@ -130,11 +130,13 @@ class _PromptModule:
 
 def _normalize_trainset(trainset: List[Any], sig: Any) -> List[Any]:
     """Convert plain dicts to ``dspy.Example`` objects if needed."""
-    import dspy
-
     normalized = []
     for item in trainset:
-        if isinstance(item, dspy.Example):
+        try:
+            is_example = isinstance(item, dspy.Example)
+        except TypeError:
+            is_example = hasattr(item, "_store") and hasattr(item, "with_inputs")
+        if is_example:
             normalized.append(item)
         elif isinstance(item, dict):
             # Determine which keys are inputs vs outputs
