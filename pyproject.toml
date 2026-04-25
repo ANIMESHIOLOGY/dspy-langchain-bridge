@@ -1,0 +1,94 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dspy-langchain-bridge"
+version = "0.1.0"
+description = "A compatibility bridge between DSPy and LangChain — use DSPy optimizers inside LangChain pipelines and LangChain tools inside DSPy modules."
+authors = [{ name = "Animesh" }]
+license = { file = "LICENSE" }
+readme = "README.md"
+requires-python = ">=3.9"
+keywords = ["dspy", "langchain", "llm", "optimization", "rag", "agents"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "dspy-ai>=2.0.0",
+    "langchain>=0.2.0",
+    "langchain-core>=0.2.0",
+]
+
+[project.optional-dependencies]
+langgraph = ["langgraph>=0.1.0"]
+openai   = ["langchain-openai>=0.1.0"]
+community = ["langchain-community>=0.2.0"]
+faiss    = ["faiss-cpu>=1.7.0"]
+langsmith = ["langsmith>=0.1.0"]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.4.0",
+    "black>=24.0.0",
+    "mypy>=1.8.0",
+    "pre-commit>=3.0.0",
+    "types-setuptools",
+]
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.0.0",
+    "mkdocstrings[python]>=0.24.0",
+]
+all = [
+    "dspy-langchain-bridge[langgraph,openai,community,faiss,langsmith]",
+]
+
+[project.urls]
+Homepage = "https://github.com/ANIMESHIOLOGY/dspy-langchain-bridge"
+Documentation = "https://dspy-langchain-bridge.readthedocs.io"
+Repository = "https://github.com/ANIMESHIOLOGY/dspy-langchain-bridge"
+"Bug Tracker" = "https://github.com/ANIMESHIOLOGY/dspy-langchain-bridge/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["dspy_lc_bridge"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ANN"]
+ignore = ["ANN101", "ANN102", "ANN401"]
+
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311", "py312"]
+
+[tool.mypy]
+python_version = "3.9"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m not slow')",
+    "integration: marks tests as integration tests",
+]
+addopts = "--cov=dspy_lc_bridge --cov-report=term-missing --cov-fail-under=80"
+
+[tool.coverage.run]
+source = ["dspy_lc_bridge"]
+omit = ["tests/*"]
