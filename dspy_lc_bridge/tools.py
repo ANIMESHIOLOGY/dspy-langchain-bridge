@@ -135,18 +135,14 @@ class DSPyTool:
 
     @staticmethod
     def _infer_input_key(module: Any) -> str:
-        sig = getattr(module, "signature", None) or getattr(
-            module, "__signature__", None
-        )
+        sig = getattr(module, "signature", None) or getattr(module, "__signature__", None)
         if sig and hasattr(sig, "input_fields") and sig.input_fields:
             return str(next(iter(sig.input_fields)))
         return "input"
 
     @staticmethod
     def _infer_output_key(module: Any) -> str:
-        sig = getattr(module, "signature", None) or getattr(
-            module, "__signature__", None
-        )
+        sig = getattr(module, "signature", None) or getattr(module, "__signature__", None)
         if sig and hasattr(sig, "output_fields") and sig.output_fields:
             return str(next(iter(sig.output_fields)))
         return "output"
@@ -197,9 +193,7 @@ class LangChainTool:
         if hasattr(self._tool, "invoke"):
             result = self._tool.invoke(input, **kwargs)
             return str(result)
-        raise AttributeError(
-            f"Tool {self._tool!r} has neither 'run' nor 'invoke'."
-        )
+        raise AttributeError(f"Tool {self._tool!r} has neither 'run' nor 'invoke'.")
 
     async def acall(self, input: str, **kwargs: Any) -> str:
         """Async invocation of the LangChain tool.
@@ -280,7 +274,11 @@ def DSPyNode(
             raw = {"output": str(prediction)}
 
         if output_map:
-            return {state_key: raw[out_field] for out_field, state_key in output_map.items() if out_field in raw}
+            return {
+                state_key: raw[out_field]
+                for out_field, state_key in output_map.items()
+                if out_field in raw
+            }
         return raw
 
     # Attach metadata for introspection

@@ -47,12 +47,8 @@ def simple_dspy_module(mock_dspy_prediction):
 def mock_dspy_signature():
     """A minimal dspy.Signature mock with one input and one output field."""
     sig = MagicMock()
-    sig.input_fields = {
-        "question": MagicMock(json_schema_extra={"desc": "The question to answer"})
-    }
-    sig.output_fields = {
-        "answer": MagicMock(json_schema_extra={"desc": "The answer"})
-    }
+    sig.input_fields = {"question": MagicMock(json_schema_extra={"desc": "The question to answer"})}
+    sig.output_fields = {"answer": MagicMock(json_schema_extra={"desc": "The answer"})}
     sig.__doc__ = "Answer the given question."
     return sig
 

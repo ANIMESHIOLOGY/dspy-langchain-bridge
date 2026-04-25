@@ -136,9 +136,7 @@ def test_build_optimized_prompt_injects_instructions() -> None:
 
     sig = make_sig_mock(["question"], ["answer"])
     original = PromptTemplate.from_template("{question}")
-    result = _build_optimized_prompt(
-        original, demos=[], instructions="Think carefully.", sig=sig
-    )
+    result = _build_optimized_prompt(original, demos=[], instructions="Think carefully.", sig=sig)
     system_msg = result.messages[0].prompt.template
     assert "carefully" in system_msg
 

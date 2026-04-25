@@ -24,8 +24,7 @@ def _get_signature_fields(sig: Any) -> tuple[dict[str, Any], dict[str, Any]]:
     if hasattr(sig, "input_fields") and hasattr(sig, "output_fields"):
         return dict(sig.input_fields), dict(sig.output_fields)
     raise TypeError(
-        f"Cannot extract fields from {type(sig)!r}. "
-        "Expected a dspy.Signature class or instance."
+        f"Cannot extract fields from {type(sig)!r}. " "Expected a dspy.Signature class or instance."
     )
 
 
@@ -167,9 +166,7 @@ def prompt_to_signature(
         # ChatPromptTemplate — gather variables from all message templates
         input_vars = list(prompt.input_variables)
     else:
-        raise TypeError(
-            f"Cannot extract input_variables from {type(prompt)!r}."
-        )
+        raise TypeError(f"Cannot extract input_variables from {type(prompt)!r}.")
 
     sig_str = ", ".join(input_vars) + " -> " + ", ".join(output_fields)
     return dspy.Signature(sig_str)

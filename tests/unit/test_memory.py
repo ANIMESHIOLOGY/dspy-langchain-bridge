@@ -34,9 +34,7 @@ def test_get_history_correct_content(mock_lc_memory) -> None:
 
 
 def test_get_history_custom_roles(mock_lc_memory) -> None:
-    adapter = LangChainMemoryAdapter(
-        mock_lc_memory, human_role="human", ai_role="ai"
-    )
+    adapter = LangChainMemoryAdapter(mock_lc_memory, human_role="human", ai_role="ai")
     history = adapter.get_history()
     assert history[0]["role"] == "human"
     assert history[1]["role"] == "ai"
@@ -65,9 +63,7 @@ def test_get_history_system_message() -> None:
 def test_save_turn_calls_save_context(mock_lc_memory) -> None:
     adapter = LangChainMemoryAdapter(mock_lc_memory)
     adapter.save_turn("What is 2+2?", "4")
-    mock_lc_memory.save_context.assert_called_once_with(
-        {"input": "What is 2+2?"}, {"output": "4"}
-    )
+    mock_lc_memory.save_context.assert_called_once_with({"input": "What is 2+2?"}, {"output": "4"})
 
 
 def test_save_turn_no_method_does_not_raise() -> None:

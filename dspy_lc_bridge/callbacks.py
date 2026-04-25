@@ -51,7 +51,9 @@ class DSPyCallbackHandler:
     # LangChain callbacks protocol (no-op stubs + DSPy instrumentation)
     # ------------------------------------------------------------------
 
-    def on_chain_start(self, serialized: dict[str, Any], inputs: dict[str, Any], **kwargs: Any) -> None:
+    def on_chain_start(
+        self, serialized: dict[str, Any], inputs: dict[str, Any], **kwargs: Any
+    ) -> None:
         pass
 
     def on_chain_end(self, outputs: dict[str, Any], **kwargs: Any) -> None:
@@ -82,7 +84,9 @@ class DSPyCallbackHandler:
     # DSPy module tracing
     # ------------------------------------------------------------------
 
-    def trace_dspy_module(self, module: Any, inputs: dict[str, Any], outputs: Any, latency_ms: float) -> None:
+    def trace_dspy_module(
+        self, module: Any, inputs: dict[str, Any], outputs: Any, latency_ms: float
+    ) -> None:
         """Record a DSPy module execution as a span.
 
         This is called automatically by ``DSPyRunnable`` when a handler is
@@ -115,7 +119,11 @@ class DSPyCallbackHandler:
                 name=f"DSPy:{span['module']}",
                 run_type="chain",
                 inputs=span["inputs"],
-                outputs=span["outputs"] if isinstance(span["outputs"], dict) else {"output": str(span["outputs"])},
+                outputs=(
+                    span["outputs"]
+                    if isinstance(span["outputs"], dict)
+                    else {"output": str(span["outputs"])}
+                ),
                 extra={"latency_ms": span["latency_ms"]},
                 project_name=self.project_name,
             )
@@ -133,10 +141,7 @@ class DSPyCallbackHandler:
         return list(self._spans)
 
     def __repr__(self) -> str:
-        return (
-            f"DSPyCallbackHandler(project={self.project_name!r}, "
-            f"spans={len(self._spans)})"
-        )
+        return f"DSPyCallbackHandler(project={self.project_name!r}, " f"spans={len(self._spans)})"
 
 
 def instrument_module(module: Any, handler: DSPyCallbackHandler) -> Any:

@@ -23,12 +23,10 @@ def make_sig(input_names, output_names, doc="Answer the question."):
     sig = MagicMock()
     sig.__doc__ = doc
     sig.input_fields = {
-        name: MagicMock(json_schema_extra={"desc": f"The {name}"})
-        for name in input_names
+        name: MagicMock(json_schema_extra={"desc": f"The {name}"}) for name in input_names
     }
     sig.output_fields = {
-        name: MagicMock(json_schema_extra={"desc": f"The {name}"})
-        for name in output_names
+        name: MagicMock(json_schema_extra={"desc": f"The {name}"}) for name in output_names
     }
     return sig
 

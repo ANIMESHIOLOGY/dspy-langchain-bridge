@@ -79,9 +79,7 @@ class LangChainRetriever:
         for query in queries:
             docs = self._retriever.invoke(query)
             for doc in docs[:effective_k]:
-                passages.append(
-                    doc.page_content if hasattr(doc, "page_content") else str(doc)
-                )
+                passages.append(doc.page_content if hasattr(doc, "page_content") else str(doc))
 
         return dspy.Prediction(passages=passages)
 
@@ -118,9 +116,7 @@ class LangChainRetriever:
                 loop = asyncio.get_event_loop()
                 docs = await loop.run_in_executor(None, self._retriever.invoke, query)
             for doc in docs[:effective_k]:
-                passages.append(
-                    doc.page_content if hasattr(doc, "page_content") else str(doc)
-                )
+                passages.append(doc.page_content if hasattr(doc, "page_content") else str(doc))
 
         return dspy.Prediction(passages=passages)
 

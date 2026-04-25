@@ -142,6 +142,4 @@ class LangChainMemoryAdapter:
         return history
 
     def __repr__(self) -> str:
-        return (
-            f"LangChainMemoryAdapter(memory={self.memory.__class__.__name__})"
-        )
+        return f"LangChainMemoryAdapter(memory={self.memory.__class__.__name__})"

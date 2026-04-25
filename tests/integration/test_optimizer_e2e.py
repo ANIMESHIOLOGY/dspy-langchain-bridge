@@ -28,7 +28,9 @@ def test_bootstrap_fewshot_optimizes_langchain_prompt() -> None:
     trainset = [
         dspy.Example(question="What is 2+2?", answer="4").with_inputs("question"),
         dspy.Example(question="What is 3+3?", answer="6").with_inputs("question"),
-        dspy.Example(question="What is the capital of France?", answer="Paris").with_inputs("question"),
+        dspy.Example(question="What is the capital of France?", answer="Paris").with_inputs(
+            "question"
+        ),
     ]
 
     def exact_match(example: dspy.Example, prediction: dspy.Prediction, trace: None = None) -> bool:
