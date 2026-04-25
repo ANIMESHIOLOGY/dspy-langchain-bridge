@@ -7,15 +7,14 @@ prompt definitions across both frameworks.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Tuple
-
+from typing import Any
 
 # ---------------------------------------------------------------------------
 # DSPy Signature → LangChain PromptTemplate
 # ---------------------------------------------------------------------------
 
 
-def _get_signature_fields(sig: Any) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+def _get_signature_fields(sig: Any) -> tuple[dict[str, Any], dict[str, Any]]:
     """Return (input_fields, output_fields) from a DSPy Signature.
 
     Handles both the class-based DSPy 2.x Signature (accessed via the class
@@ -61,7 +60,7 @@ def signature_to_prompt(sig: Any, include_output_hint: bool = False) -> Any:
 
     input_fields, output_fields = _get_signature_fields(sig)
 
-    parts: List[str] = []
+    parts: list[str] = []
     for field_name, field_info in input_fields.items():
         desc = _get_field_desc(field_info)
         if desc:
@@ -109,7 +108,7 @@ def signature_to_chat_prompt(sig: Any) -> Any:
         doc = f"Given the inputs, produce: {out_names}."
 
     # Build human message template
-    human_parts: List[str] = []
+    human_parts: list[str] = []
     for field_name, field_info in input_fields.items():
         desc = _get_field_desc(field_info)
         label = desc if desc else field_name
@@ -131,7 +130,7 @@ def signature_to_chat_prompt(sig: Any) -> Any:
 
 def prompt_to_signature(
     prompt: Any,
-    output_fields: Optional[List[str]] = None,
+    output_fields: list[str] | None = None,
 ) -> Any:
     """Convert a LangChain PromptTemplate to a DSPy Signature.
 
@@ -163,7 +162,7 @@ def prompt_to_signature(
 
     # Collect input variable names
     if hasattr(prompt, "input_variables"):
-        input_vars: List[str] = list(prompt.input_variables)
+        input_vars: list[str] = list(prompt.input_variables)
     elif hasattr(prompt, "messages"):
         # ChatPromptTemplate — gather variables from all message templates
         input_vars = list(prompt.input_variables)

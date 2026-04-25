@@ -2,10 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List
 from unittest.mock import MagicMock, patch
-
-import pytest
 
 from dspy_lc_bridge.optimizers import (
     _build_optimized_prompt,
@@ -14,7 +11,6 @@ from dspy_lc_bridge.optimizers import (
     _PromptModule,
     optimize_langchain_prompt,
 )
-
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -48,13 +44,13 @@ def make_compiled_module(demos=None, instructions=""):
 # ---------------------------------------------------------------------------
 
 
-def test_prompt_module_is_callable():
+def test_prompt_module_is_callable() -> None:
     sig = make_sig_mock(["question"], ["answer"])
     module = _PromptModule(sig)
     assert callable(module)
 
 
-def test_prompt_module_named_predictors():
+def test_prompt_module_named_predictors() -> None:
     sig = make_sig_mock(["question"], ["answer"])
     module = _PromptModule(sig)
     named = module.named_predictors()
@@ -67,14 +63,14 @@ def test_prompt_module_named_predictors():
 # ---------------------------------------------------------------------------
 
 
-def test_normalize_trainset_dicts():
+def test_normalize_trainset_dicts() -> None:
     sig = make_sig_mock(["question"], ["answer"])
     examples = [{"question": "Q?", "answer": "A."}]
     result = _normalize_trainset(examples, sig)
     assert len(result) == 1
 
 
-def test_normalize_trainset_preserves_dspy_examples():
+def test_normalize_trainset_preserves_dspy_examples() -> None:
     import dspy
 
     sig = make_sig_mock(["q"], ["a"])
@@ -88,7 +84,7 @@ def test_normalize_trainset_preserves_dspy_examples():
 # ---------------------------------------------------------------------------
 
 
-def test_extract_artefacts_demos():
+def test_extract_artefacts_demos() -> None:
     demo = MagicMock()
     demo._store = {"question": "Q?", "answer": "A."}
     compiled = make_compiled_module(demos=[demo])
@@ -97,13 +93,13 @@ def test_extract_artefacts_demos():
     assert demos[0]["question"] == "Q?"
 
 
-def test_extract_artefacts_instructions():
+def test_extract_artefacts_instructions() -> None:
     compiled = make_compiled_module(instructions="Think step by step.")
     _, instructions = _extract_optimized_artefacts(compiled)
     assert "step" in instructions
 
 
-def test_extract_artefacts_empty():
+def test_extract_artefacts_empty() -> None:
     compiled = make_compiled_module(demos=[], instructions="")
     demos, instructions = _extract_optimized_artefacts(compiled)
     assert demos == []
@@ -115,7 +111,7 @@ def test_extract_artefacts_empty():
 # ---------------------------------------------------------------------------
 
 
-def test_build_optimized_prompt_returns_chat_template():
+def test_build_optimized_prompt_returns_chat_template() -> None:
     from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
 
     sig = make_sig_mock(["question"], ["answer"])
@@ -124,8 +120,8 @@ def test_build_optimized_prompt_returns_chat_template():
     assert isinstance(result, ChatPromptTemplate)
 
 
-def test_build_optimized_prompt_injects_demos():
-    from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
+def test_build_optimized_prompt_injects_demos() -> None:
+    from langchain_core.prompts import PromptTemplate
 
     sig = make_sig_mock(["question"], ["answer"])
     original = PromptTemplate.from_template("{question}")
@@ -135,8 +131,8 @@ def test_build_optimized_prompt_injects_demos():
     assert len(result.messages) == 4
 
 
-def test_build_optimized_prompt_injects_instructions():
-    from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
+def test_build_optimized_prompt_injects_instructions() -> None:
+    from langchain_core.prompts import PromptTemplate
 
     sig = make_sig_mock(["question"], ["answer"])
     original = PromptTemplate.from_template("{question}")
@@ -152,10 +148,8 @@ def test_build_optimized_prompt_injects_instructions():
 # ---------------------------------------------------------------------------
 
 
-def test_optimize_langchain_prompt_returns_chat_template():
+def test_optimize_langchain_prompt_returns_chat_template() -> None:
     from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
-
-    import dspy
 
     original = PromptTemplate.from_template("{question}")
     optimizer = MagicMock()

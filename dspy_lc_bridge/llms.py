@@ -8,16 +8,16 @@ set up.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from dspy_lc_bridge._types import ChatMessage
 
 
-def _to_lc_messages(messages: List[ChatMessage]) -> List[Any]:
+def _to_lc_messages(messages: list[ChatMessage]) -> list[Any]:
     """Convert OpenAI-style message dicts to LangChain message objects."""
     from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 
-    lc: List[Any] = []
+    lc: list[Any] = []
     for msg in messages:
         role = msg.get("role", "user")
         content = msg.get("content", "")
@@ -67,13 +67,13 @@ class LangChainLM:
     def __init__(
         self,
         llm: Any,
-        temperature: Optional[float] = None,
-        max_tokens: Optional[int] = None,
+        temperature: float | None = None,
+        max_tokens: int | None = None,
     ) -> None:
         self.llm = llm
         self.temperature = temperature
         self.max_tokens = max_tokens
-        self.history: List[Dict[str, Any]] = []
+        self.history: list[dict[str, Any]] = []
         # Detect whether this is a chat model or a plain completion model
         self._is_chat = self._detect_chat_model(llm)
 
@@ -86,8 +86,8 @@ class LangChainLM:
         except ImportError:
             return hasattr(llm, "invoke") and not hasattr(llm, "predict")
 
-    def _build_invoke_kwargs(self) -> Dict[str, Any]:
-        kwargs: Dict[str, Any] = {}
+    def _build_invoke_kwargs(self) -> dict[str, Any]:
+        kwargs: dict[str, Any] = {}
         if self.temperature is not None:
             kwargs["temperature"] = self.temperature
         if self.max_tokens is not None:
@@ -100,10 +100,10 @@ class LangChainLM:
 
     def __call__(
         self,
-        prompt: Optional[str] = None,
-        messages: Optional[List[ChatMessage]] = None,
+        prompt: str | None = None,
+        messages: list[ChatMessage] | None = None,
         **kwargs: Any,
-    ) -> List[str]:
+    ) -> list[str]:
         """Call the LangChain LLM and return a list of completion strings.
 
         DSPy calls this method with either ``prompt`` (a raw string) or
@@ -138,7 +138,7 @@ class LangChainLM:
         self.history.append({"messages": messages, "outputs": [output]})
         return [output]
 
-    def inspect_history(self, n: int = 1) -> List[Dict[str, Any]]:
+    def inspect_history(self, n: int = 1) -> list[dict[str, Any]]:
         """Return the last *n* LM call records.
 
         Args:
@@ -149,7 +149,7 @@ class LangChainLM:
         """
         return self.history[-n:]
 
-    def get_usage_metadata(self) -> Dict[str, int]:
+    def get_usage_metadata(self) -> dict[str, int]:
         """Return aggregated token usage metadata.
 
         Returns:

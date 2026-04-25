@@ -11,7 +11,7 @@ import pytest
 
 @pytest.mark.slow
 @pytest.mark.integration
-def test_langchain_retriever_in_dspy_rag():
+def test_langchain_retriever_in_dspy_rag() -> None:
     """DSPy RAG module using a LangChain FAISS retriever."""
     pytest.importorskip("langchain_community")
     pytest.importorskip("faiss")
@@ -51,13 +51,12 @@ def test_langchain_retriever_in_dspy_rag():
 
 @pytest.mark.slow
 @pytest.mark.integration
-def test_dspy_retriever_in_langchain_chain():
+def test_dspy_retriever_in_langchain_chain() -> None:
     """LangChain chain using a DSPy Retrieve module as BaseRetriever."""
     import dspy
-    from langchain_core.prompts import ChatPromptTemplate
     from langchain_openai import ChatOpenAI
 
-    from dspy_lc_bridge import DSPyRetriever, DSPyRunnable, LangChainLM
+    from dspy_lc_bridge import DSPyRetriever, LangChainLM
 
     llm = ChatOpenAI(model="gpt-4o-mini")
     dspy.settings.configure(lm=LangChainLM(llm))

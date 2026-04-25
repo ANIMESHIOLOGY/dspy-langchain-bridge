@@ -8,12 +8,10 @@ import pytest
 
 from dspy_lc_bridge.signatures import (
     _get_field_desc,
-    _get_signature_fields,
     prompt_to_signature,
     signature_to_chat_prompt,
     signature_to_prompt,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -40,17 +38,17 @@ def make_sig(input_names, output_names, doc="Answer the question."):
 # ---------------------------------------------------------------------------
 
 
-def test_get_field_desc_from_json_schema_extra():
+def test_get_field_desc_from_json_schema_extra() -> None:
     field = MagicMock()
     field.json_schema_extra = {"desc": "My description"}
     assert _get_field_desc(field) == "My description"
 
 
-def test_get_field_desc_from_dict():
+def test_get_field_desc_from_dict() -> None:
     assert _get_field_desc({"desc": "dict desc"}) == "dict desc"
 
 
-def test_get_field_desc_empty():
+def test_get_field_desc_empty() -> None:
     field = MagicMock()
     field.json_schema_extra = {}
     assert _get_field_desc(field) == ""
@@ -61,33 +59,33 @@ def test_get_field_desc_empty():
 # ---------------------------------------------------------------------------
 
 
-def test_signature_to_prompt_single_input():
+def test_signature_to_prompt_single_input() -> None:
     sig = make_sig(["question"], ["answer"])
     prompt = signature_to_prompt(sig)
     assert "question" in prompt.input_variables
     assert "{question}" in prompt.template
 
 
-def test_signature_to_prompt_multiple_inputs():
+def test_signature_to_prompt_multiple_inputs() -> None:
     sig = make_sig(["context", "question"], ["answer"])
     prompt = signature_to_prompt(sig)
     assert set(prompt.input_variables) == {"context", "question"}
 
 
-def test_signature_to_prompt_includes_descriptions():
+def test_signature_to_prompt_includes_descriptions() -> None:
     sig = make_sig(["question"], ["answer"])
     prompt = signature_to_prompt(sig)
     # Description comment should appear above the variable placeholder
     assert "# The question" in prompt.template
 
 
-def test_signature_to_prompt_output_hint():
+def test_signature_to_prompt_output_hint() -> None:
     sig = make_sig(["question"], ["answer"])
     prompt = signature_to_prompt(sig, include_output_hint=True)
     assert "answer" in prompt.template
 
 
-def test_signature_to_prompt_raises_on_invalid():
+def test_signature_to_prompt_raises_on_invalid() -> None:
     with pytest.raises(TypeError):
         signature_to_prompt("not a signature")
 
@@ -97,7 +95,7 @@ def test_signature_to_prompt_raises_on_invalid():
 # ---------------------------------------------------------------------------
 
 
-def test_signature_to_chat_prompt_returns_chat_template():
+def test_signature_to_chat_prompt_returns_chat_template() -> None:
     from langchain_core.prompts import ChatPromptTemplate
 
     sig = make_sig(["question"], ["answer"])
@@ -105,7 +103,7 @@ def test_signature_to_chat_prompt_returns_chat_template():
     assert isinstance(chat_prompt, ChatPromptTemplate)
 
 
-def test_signature_to_chat_prompt_system_uses_docstring():
+def test_signature_to_chat_prompt_system_uses_docstring() -> None:
     sig = make_sig(["question"], ["answer"], doc="You are an expert.")
     chat_prompt = signature_to_chat_prompt(sig)
     # The system message should contain the docstring
@@ -113,7 +111,7 @@ def test_signature_to_chat_prompt_system_uses_docstring():
     assert "expert" in system_template
 
 
-def test_signature_to_chat_prompt_has_human_message():
+def test_signature_to_chat_prompt_has_human_message() -> None:
     sig = make_sig(["question"], ["answer"])
     chat_prompt = signature_to_chat_prompt(sig)
     assert len(chat_prompt.messages) == 2
@@ -125,7 +123,7 @@ def test_signature_to_chat_prompt_has_human_message():
 # ---------------------------------------------------------------------------
 
 
-def test_prompt_to_signature_basic():
+def test_prompt_to_signature_basic() -> None:
     from langchain_core.prompts import PromptTemplate
 
     prompt = PromptTemplate.from_template("Answer: {question}")
@@ -133,7 +131,7 @@ def test_prompt_to_signature_basic():
     assert "question" in sig.input_fields
 
 
-def test_prompt_to_signature_multiple_vars():
+def test_prompt_to_signature_multiple_vars() -> None:
     from langchain_core.prompts import PromptTemplate
 
     prompt = PromptTemplate.from_template("{context}\n{question}")
@@ -143,7 +141,7 @@ def test_prompt_to_signature_multiple_vars():
     assert "answer" in sig.output_fields
 
 
-def test_prompt_to_signature_default_output():
+def test_prompt_to_signature_default_output() -> None:
     from langchain_core.prompts import PromptTemplate
 
     prompt = PromptTemplate.from_template("{question}")
@@ -151,7 +149,7 @@ def test_prompt_to_signature_default_output():
     assert "answer" in sig.output_fields
 
 
-def test_prompt_to_signature_custom_output_fields():
+def test_prompt_to_signature_custom_output_fields() -> None:
     from langchain_core.prompts import PromptTemplate
 
     prompt = PromptTemplate.from_template("{document}")
@@ -165,7 +163,7 @@ def test_prompt_to_signature_custom_output_fields():
 # ---------------------------------------------------------------------------
 
 
-def test_round_trip_signature_prompt_signature():
+def test_round_trip_signature_prompt_signature() -> None:
     sig = make_sig(["context", "question"], ["answer"])
     prompt = signature_to_prompt(sig)
     sig2 = prompt_to_signature(prompt, output_fields=["answer"])

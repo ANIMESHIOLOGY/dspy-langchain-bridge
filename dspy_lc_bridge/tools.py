@@ -10,8 +10,7 @@ from __future__ import annotations
 import asyncio
 import inspect
 import json
-from typing import Any, Callable, Dict, List, Optional, Type, Union
-
+from typing import Any, Callable
 
 # ---------------------------------------------------------------------------
 # Bridge 7: DSPy Module → LangChain BaseTool
@@ -50,10 +49,10 @@ class DSPyTool:
     def __init__(
         self,
         module: Any,
-        name: Optional[str] = None,
-        description: Optional[str] = None,
-        input_key: Optional[str] = None,
-        output_key: Optional[str] = None,
+        name: str | None = None,
+        description: str | None = None,
+        input_key: str | None = None,
+        output_key: str | None = None,
     ) -> None:
         self.module = module
         self.name: str = name or _snake_case(module.__class__.__name__)
@@ -102,7 +101,7 @@ class DSPyTool:
     # Helpers
     # ------------------------------------------------------------------
 
-    def _parse_input(self, tool_input: str) -> Dict[str, Any]:
+    def _parse_input(self, tool_input: str) -> dict[str, Any]:
         """Parse a raw agent string into a dict for the DSPy module.
 
         Tries JSON first; falls back to assigning the entire string to the
@@ -140,7 +139,7 @@ class DSPyTool:
             module, "__signature__", None
         )
         if sig and hasattr(sig, "input_fields") and sig.input_fields:
-            return next(iter(sig.input_fields))
+            return str(next(iter(sig.input_fields)))
         return "input"
 
     @staticmethod
@@ -149,7 +148,7 @@ class DSPyTool:
             module, "__signature__", None
         )
         if sig and hasattr(sig, "output_fields") and sig.output_fields:
-            return next(iter(sig.output_fields))
+            return str(next(iter(sig.output_fields)))
         return "output"
 
     def __repr__(self) -> str:
@@ -227,9 +226,9 @@ class LangChainTool:
 
 def DSPyNode(
     module: Any,
-    input_map: Optional[Dict[str, str]] = None,
-    output_map: Optional[Dict[str, str]] = None,
-) -> Callable[[Dict[str, Any]], Dict[str, Any]]:
+    input_map: dict[str, str] | None = None,
+    output_map: dict[str, str] | None = None,
+) -> Callable[[dict[str, Any]], dict[str, Any]]:
     """Create a LangGraph-compatible node function from a DSPy module.
 
     A LangGraph node function receives the full graph state dict and returns
@@ -258,7 +257,7 @@ def DSPyNode(
         >>> graph.add_node("reason", node_fn)
     """
 
-    def node_fn(state: Dict[str, Any]) -> Dict[str, Any]:
+    def node_fn(state: dict[str, Any]) -> dict[str, Any]:
         # Build DSPy input from state
         if input_map:
             module_input = {

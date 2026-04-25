@@ -2,24 +2,22 @@
 
 from __future__ import annotations
 
-import asyncio
 from unittest.mock import MagicMock
 
 import pytest
 
 from dspy_lc_bridge.runnables import DSPyRunnable, _prediction_to_dict
 
-
 # ---------------------------------------------------------------------------
 # _prediction_to_dict helper
 # ---------------------------------------------------------------------------
 
 
-def test_prediction_to_dict_from_dict():
+def test_prediction_to_dict_from_dict() -> None:
     assert _prediction_to_dict({"answer": "Paris"}) == {"answer": "Paris"}
 
 
-def test_prediction_to_dict_from_items():
+def test_prediction_to_dict_from_items() -> None:
     pred = MagicMock()
     pred.items = lambda: {"answer": "Paris", "reasoning": "Because."}.items()
     del pred._store  # ensure items() path is taken
@@ -27,7 +25,7 @@ def test_prediction_to_dict_from_items():
     assert result["answer"] == "Paris"
 
 
-def test_prediction_to_dict_from_store():
+def test_prediction_to_dict_from_store() -> None:
     pred = MagicMock()
     pred._store = {"answer": "Paris"}
     result = _prediction_to_dict(pred)
@@ -39,7 +37,7 @@ def test_prediction_to_dict_from_store():
 # ---------------------------------------------------------------------------
 
 
-def test_invoke_returns_dict(simple_dspy_module):
+def test_invoke_returns_dict(simple_dspy_module) -> None:
     runnable = DSPyRunnable(simple_dspy_module)
     result = runnable.invoke({"question": "What is the capital of France?"})
     assert isinstance(result, dict)
@@ -47,13 +45,13 @@ def test_invoke_returns_dict(simple_dspy_module):
     assert result["answer"] == "Paris"
 
 
-def test_invoke_calls_module_with_kwargs(simple_dspy_module):
+def test_invoke_calls_module_with_kwargs(simple_dspy_module) -> None:
     runnable = DSPyRunnable(simple_dspy_module)
     runnable.invoke({"question": "Hello?"})
     simple_dspy_module.assert_called_once_with(question="Hello?")
 
 
-def test_invoke_accepts_aimessage_like_input(simple_dspy_module):
+def test_invoke_accepts_aimessage_like_input(simple_dspy_module) -> None:
     """If a LangChain AIMessage is passed, content should be extracted."""
     msg = MagicMock()
     msg.content = "extracted text"
@@ -70,7 +68,7 @@ def test_invoke_accepts_aimessage_like_input(simple_dspy_module):
 
 
 @pytest.mark.asyncio
-async def test_ainvoke_returns_dict(simple_dspy_module):
+async def test_ainvoke_returns_dict(simple_dspy_module) -> None:
     runnable = DSPyRunnable(simple_dspy_module)
     result = await runnable.ainvoke({"question": "async question"})
     assert isinstance(result, dict)
@@ -82,7 +80,7 @@ async def test_ainvoke_returns_dict(simple_dspy_module):
 # ---------------------------------------------------------------------------
 
 
-def test_batch_processes_all_inputs(simple_dspy_module):
+def test_batch_processes_all_inputs(simple_dspy_module) -> None:
     runnable = DSPyRunnable(simple_dspy_module)
     inputs = [{"question": "Q1"}, {"question": "Q2"}, {"question": "Q3"}]
     results = runnable.batch(inputs)
@@ -96,7 +94,7 @@ def test_batch_processes_all_inputs(simple_dspy_module):
 
 
 @pytest.mark.asyncio
-async def test_abatch_processes_all_inputs(simple_dspy_module):
+async def test_abatch_processes_all_inputs(simple_dspy_module) -> None:
     runnable = DSPyRunnable(simple_dspy_module)
     inputs = [{"question": "Q1"}, {"question": "Q2"}]
     results = await runnable.abatch(inputs)
@@ -108,7 +106,7 @@ async def test_abatch_processes_all_inputs(simple_dspy_module):
 # ---------------------------------------------------------------------------
 
 
-def test_repr(simple_dspy_module):
+def test_repr(simple_dspy_module) -> None:
     runnable = DSPyRunnable(simple_dspy_module)
     assert "DSPyRunnable" in repr(runnable)
     assert "MockChainOfThought" in repr(runnable)

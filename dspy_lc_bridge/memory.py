@@ -7,8 +7,7 @@ turn-list format that DSPy multi-turn modules expect as ``history``.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Union
-
+from typing import Any
 
 # ---------------------------------------------------------------------------
 # DSPy history format
@@ -17,7 +16,7 @@ from typing import Any, Dict, List, Optional, Union
 #   [{"role": "user", "content": "..."}, {"role": "assistant", "content": "..."}]
 # This matches the OpenAI chat messages convention.
 
-HistoryEntry = Dict[str, str]
+HistoryEntry = dict[str, str]
 
 
 class LangChainMemoryAdapter:
@@ -67,7 +66,7 @@ class LangChainMemoryAdapter:
     # Public interface
     # ------------------------------------------------------------------
 
-    def get_history(self) -> List[HistoryEntry]:
+    def get_history(self) -> list[HistoryEntry]:
         """Return conversation history as a list of role/content dicts.
 
         Returns:
@@ -99,7 +98,7 @@ class LangChainMemoryAdapter:
     # Internals
     # ------------------------------------------------------------------
 
-    def _extract_messages(self) -> List[Any]:
+    def _extract_messages(self) -> list[Any]:
         """Extract LangChain message objects from the memory."""
         # return_messages=True path — memory stores Message objects directly
         if hasattr(self.memory, "chat_memory"):
@@ -125,9 +124,9 @@ class LangChainMemoryAdapter:
                         return []
         return []
 
-    def _messages_to_history(self, messages: List[Any]) -> List[HistoryEntry]:
+    def _messages_to_history(self, messages: list[Any]) -> list[HistoryEntry]:
         """Convert LangChain Message objects to DSPy history dicts."""
-        history: List[HistoryEntry] = []
+        history: list[HistoryEntry] = []
         for msg in messages:
             content = msg.content if hasattr(msg, "content") else str(msg)
             msg_type = type(msg).__name__.lower()

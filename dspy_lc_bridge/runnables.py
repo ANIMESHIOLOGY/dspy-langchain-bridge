@@ -7,11 +7,10 @@ inside LCEL chains using the pipe (``|``) operator.
 from __future__ import annotations
 
 import asyncio
-from typing import Any, Dict, Iterator, List, Optional, Type
+from typing import Any
 
 import dspy
 from langchain_core.runnables import Runnable, RunnableConfig
-from langchain_core.runnables.utils import Input, Output
 
 from dspy_lc_bridge._types import PredictionDict
 
@@ -35,7 +34,7 @@ def _prediction_to_dict(prediction: Any) -> PredictionDict:
         return {"output": str(prediction)}
 
 
-class DSPyRunnable(Runnable[Dict[str, Any], Dict[str, Any]]):
+class DSPyRunnable(Runnable):  # type: ignore[misc]
     """Wraps a ``dspy.Module`` as a LangChain ``Runnable``.
 
     This lets any compiled or uncompiled DSPy module participate in LCEL
@@ -64,10 +63,10 @@ class DSPyRunnable(Runnable[Dict[str, Any], Dict[str, Any]]):
 
     def invoke(
         self,
-        input: Dict[str, Any],
-        config: Optional[RunnableConfig] = None,
+        input: dict[str, Any],
+        config: RunnableConfig | None = None,
         **kwargs: Any,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Invoke the DSPy module synchronously.
 
         Args:
@@ -81,17 +80,17 @@ class DSPyRunnable(Runnable[Dict[str, Any], Dict[str, Any]]):
         # Support LangChain message objects as passthrough (e.g. after a prompt)
         if hasattr(input, "content"):
             # AIMessage / HumanMessage — extract text content
-            input = {"text": input.content}  # type: ignore[assignment]
+            input = {"text": input.content}
 
         prediction = self.module(**input)
         return _prediction_to_dict(prediction)
 
     async def ainvoke(
         self,
-        input: Dict[str, Any],
-        config: Optional[RunnableConfig] = None,
+        input: dict[str, Any],
+        config: RunnableConfig | None = None,
         **kwargs: Any,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Invoke the DSPy module asynchronously.
 
         DSPy is synchronous; this runs the call in a thread-pool executor so
@@ -109,10 +108,10 @@ class DSPyRunnable(Runnable[Dict[str, Any], Dict[str, Any]]):
 
     def batch(
         self,
-        inputs: List[Dict[str, Any]],
-        config: Optional[RunnableConfig] = None,
+        inputs: list[dict[str, Any]],
+        config: RunnableConfig | None = None,
         **kwargs: Any,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Invoke the DSPy module on a list of inputs.
 
         Args:
@@ -126,10 +125,10 @@ class DSPyRunnable(Runnable[Dict[str, Any], Dict[str, Any]]):
 
     async def abatch(
         self,
-        inputs: List[Dict[str, Any]],
-        config: Optional[RunnableConfig] = None,
+        inputs: list[dict[str, Any]],
+        config: RunnableConfig | None = None,
         **kwargs: Any,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Async batch invocation.
 
         Args:
@@ -148,11 +147,3 @@ class DSPyRunnable(Runnable[Dict[str, Any], Dict[str, Any]]):
 
     def __repr__(self) -> str:
         return f"DSPyRunnable(module={self.module.__class__.__name__})"
-
-    @property
-    def InputType(self) -> Type[Dict[str, Any]]:  # type: ignore[override]
-        return Dict[str, Any]  # type: ignore[return-value]
-
-    @property
-    def OutputType(self) -> Type[Dict[str, Any]]:  # type: ignore[override]
-        return Dict[str, Any]  # type: ignore[return-value]

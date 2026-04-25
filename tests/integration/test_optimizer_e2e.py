@@ -11,7 +11,7 @@ import pytest
 
 @pytest.mark.slow
 @pytest.mark.integration
-def test_bootstrap_fewshot_optimizes_langchain_prompt():
+def test_bootstrap_fewshot_optimizes_langchain_prompt() -> None:
     """Run BootstrapFewShot on a LangChain PromptTemplate."""
     import dspy
     from dspy.teleprompt import BootstrapFewShot

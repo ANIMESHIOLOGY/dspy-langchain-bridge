@@ -5,11 +5,9 @@ All LLM calls are mocked — no real API keys are needed for unit tests.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pytest
-
 
 # ---------------------------------------------------------------------------
 # DSPy fixtures
@@ -110,7 +108,6 @@ def mock_lc_retriever():
 @pytest.fixture()
 def mock_dspy_retrieve(mock_dspy_prediction):
     """A mock DSPy Retrieve module."""
-    import dspy
 
     retrieve = MagicMock()
     retrieve.__class__.__name__ = "MockRetrieve"

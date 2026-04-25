@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import functools
 import time
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any
 
 
 class DSPyCallbackHandler:
@@ -33,9 +33,9 @@ class DSPyCallbackHandler:
         >>> result = chain.invoke({"question": "..."}, config=config)
     """
 
-    def __init__(self, project_name: Optional[str] = None) -> None:
+    def __init__(self, project_name: str | None = None) -> None:
         self.project_name = project_name
-        self._spans: List[Dict[str, Any]] = []
+        self._spans: list[dict[str, Any]] = []
         self._langsmith_available = self._check_langsmith()
 
     @staticmethod
@@ -51,16 +51,16 @@ class DSPyCallbackHandler:
     # LangChain callbacks protocol (no-op stubs + DSPy instrumentation)
     # ------------------------------------------------------------------
 
-    def on_chain_start(self, serialized: Dict[str, Any], inputs: Dict[str, Any], **kwargs: Any) -> None:
+    def on_chain_start(self, serialized: dict[str, Any], inputs: dict[str, Any], **kwargs: Any) -> None:
         pass
 
-    def on_chain_end(self, outputs: Dict[str, Any], **kwargs: Any) -> None:
+    def on_chain_end(self, outputs: dict[str, Any], **kwargs: Any) -> None:
         pass
 
     def on_chain_error(self, error: Exception, **kwargs: Any) -> None:
         pass
 
-    def on_llm_start(self, serialized: Dict[str, Any], prompts: List[str], **kwargs: Any) -> None:
+    def on_llm_start(self, serialized: dict[str, Any], prompts: list[str], **kwargs: Any) -> None:
         pass
 
     def on_llm_end(self, response: Any, **kwargs: Any) -> None:
@@ -69,7 +69,7 @@ class DSPyCallbackHandler:
     def on_llm_error(self, error: Exception, **kwargs: Any) -> None:
         pass
 
-    def on_tool_start(self, serialized: Dict[str, Any], input_str: str, **kwargs: Any) -> None:
+    def on_tool_start(self, serialized: dict[str, Any], input_str: str, **kwargs: Any) -> None:
         pass
 
     def on_tool_end(self, output: str, **kwargs: Any) -> None:
@@ -82,7 +82,7 @@ class DSPyCallbackHandler:
     # DSPy module tracing
     # ------------------------------------------------------------------
 
-    def trace_dspy_module(self, module: Any, inputs: Dict[str, Any], outputs: Any, latency_ms: float) -> None:
+    def trace_dspy_module(self, module: Any, inputs: dict[str, Any], outputs: Any, latency_ms: float) -> None:
         """Record a DSPy module execution as a span.
 
         This is called automatically by ``DSPyRunnable`` when a handler is
@@ -94,7 +94,7 @@ class DSPyCallbackHandler:
             outputs: The prediction / output dict returned.
             latency_ms: Wall-clock latency in milliseconds.
         """
-        span: Dict[str, Any] = {
+        span: dict[str, Any] = {
             "module": module.__class__.__name__,
             "inputs": inputs,
             "outputs": outputs,
@@ -105,7 +105,7 @@ class DSPyCallbackHandler:
         if self._langsmith_available:
             self._post_to_langsmith(span)
 
-    def _post_to_langsmith(self, span: Dict[str, Any]) -> None:
+    def _post_to_langsmith(self, span: dict[str, Any]) -> None:
         """Post the span to LangSmith as a child run (best-effort)."""
         try:
             from langsmith import Client
@@ -123,7 +123,7 @@ class DSPyCallbackHandler:
             # Tracing is best-effort; never let it crash user code
             pass
 
-    def get_spans(self) -> List[Dict[str, Any]]:
+    def get_spans(self) -> list[dict[str, Any]]:
         """Return all recorded DSPy spans from this session.
 
         Returns:

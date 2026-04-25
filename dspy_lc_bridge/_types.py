@@ -2,16 +2,16 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 # DSPy Prediction fields as plain Python dicts after serialization
-PredictionDict = Dict[str, Any]
+PredictionDict = dict[str, Any]
 
 # Message in OpenAI-style chat format
-ChatMessage = Dict[str, str]  # {"role": "...", "content": "..."}
+ChatMessage = dict[str, str]  # {"role": "...", "content": "..."}
 
 # A trainset example — dict with input/output keys matching a DSPy Signature
-TrainExample = Dict[str, Any]
+TrainExample = dict[str, Any]
 
 # Metric function signature: (example, prediction, trace=None) -> float | bool
 MetricFn = Any  # Callable[[Any, Any, Optional[Any]], Union[float, bool]]
@@ -25,7 +25,7 @@ LangChainLLMType = Any
 # LangChain PromptTemplate or ChatPromptTemplate union
 LangChainPromptType = Any
 
-__all__: List[str] = [
+__all__: list[str] = [
     "PredictionDict",
     "ChatMessage",
     "TrainExample",

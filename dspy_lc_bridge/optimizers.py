@@ -9,12 +9,11 @@ template with few-shot examples and improved instructions injected.
 
 from __future__ import annotations
 
-from typing import Any, Callable, Dict, List, Optional, Union
+from typing import Any
 
 import dspy
 
 from dspy_lc_bridge._types import MetricFn, TrainExample
-
 
 # ---------------------------------------------------------------------------
 # Main entry point
@@ -24,9 +23,9 @@ from dspy_lc_bridge._types import MetricFn, TrainExample
 def optimize_langchain_prompt(
     prompt: Any,
     optimizer: Any,
-    trainset: List[TrainExample],
-    metric: Optional[MetricFn] = None,
-    output_fields: Optional[List[str]] = None,
+    trainset: list[TrainExample],
+    metric: MetricFn | None = None,
+    output_fields: list[str] | None = None,
     max_labeled_demos: int = 4,
     max_bootstrapped_demos: int = 4,
 ) -> Any:
@@ -116,10 +115,10 @@ class _PromptModule:
         return self.predict(**kwargs)
 
     # DSPy Module protocol
-    def named_predictors(self) -> List[Any]:
+    def named_predictors(self) -> list[Any]:
         return [("predict", self.predict)]
 
-    def predictors(self) -> List[Any]:
+    def predictors(self) -> list[Any]:
         return [self.predict]
 
 
@@ -128,7 +127,7 @@ class _PromptModule:
 # ---------------------------------------------------------------------------
 
 
-def _normalize_trainset(trainset: List[Any], sig: Any) -> List[Any]:
+def _normalize_trainset(trainset: list[Any], sig: Any) -> list[Any]:
     """Convert plain dicts to ``dspy.Example`` objects if needed."""
     normalized = []
     for item in trainset:
@@ -157,13 +156,13 @@ def _normalize_trainset(trainset: List[Any], sig: Any) -> List[Any]:
 
 def _extract_optimized_artefacts(
     compiled_module: Any,
-) -> tuple[List[Dict[str, Any]], str]:
+) -> tuple[list[dict[str, Any]], str]:
     """Extract few-shot demos and updated instructions from a compiled module.
 
     Returns:
         Tuple of (demos list, instructions string).
     """
-    demos: List[Dict[str, Any]] = []
+    demos: list[dict[str, Any]] = []
     instructions = ""
 
     # Walk predictor(s) in the compiled module
@@ -201,7 +200,7 @@ def _extract_optimized_artefacts(
 
 def _build_optimized_prompt(
     original_prompt: Any,
-    demos: List[Dict[str, Any]],
+    demos: list[dict[str, Any]],
     instructions: str,
     sig: Any,
 ) -> Any:
@@ -233,7 +232,7 @@ def _build_optimized_prompt(
         system_parts.append(f"\n{instructions}")
     system_msg = " ".join(system_parts).strip()
 
-    messages: List[Any] = [("system", system_msg)]
+    messages: list[Any] = [("system", system_msg)]
 
     # Inject few-shot demonstrations
     for demo in demos:

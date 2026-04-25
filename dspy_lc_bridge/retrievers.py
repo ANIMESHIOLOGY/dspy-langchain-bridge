@@ -11,8 +11,7 @@ from __future__ import annotations
 
 import asyncio
 import inspect
-from typing import Any, List, Optional, Union
-
+from typing import Any
 
 # ---------------------------------------------------------------------------
 # Bridge 4: LangChain BaseRetriever → DSPy Retrieve
@@ -54,8 +53,8 @@ class LangChainRetriever:
 
     def __call__(
         self,
-        query_or_queries: Union[str, List[str]],
-        k: Optional[int] = None,
+        query_or_queries: str | list[str],
+        k: int | None = None,
     ) -> Any:
         """Retrieve passages for one or more queries.
 
@@ -76,7 +75,7 @@ class LangChainRetriever:
         else:
             queries = query_or_queries
 
-        passages: List[str] = []
+        passages: list[str] = []
         for query in queries:
             docs = self._retriever.invoke(query)
             for doc in docs[:effective_k]:
@@ -88,8 +87,8 @@ class LangChainRetriever:
 
     async def acall(
         self,
-        query_or_queries: Union[str, List[str]],
-        k: Optional[int] = None,
+        query_or_queries: str | list[str],
+        k: int | None = None,
     ) -> Any:
         """Async version of retrieval.
 
@@ -109,7 +108,7 @@ class LangChainRetriever:
         else:
             queries = query_or_queries
 
-        passages: List[str] = []
+        passages: list[str] = []
         for query in queries:
             if hasattr(self._retriever, "ainvoke") and inspect.iscoroutinefunction(
                 self._retriever.ainvoke
@@ -164,7 +163,7 @@ class DSPyRetriever:
     # LangChain BaseRetriever protocol (duck-typed for compatibility)
     # ------------------------------------------------------------------
 
-    def invoke(self, query: str, **kwargs: Any) -> List[Any]:
+    def invoke(self, query: str, **kwargs: Any) -> list[Any]:
         """Retrieve documents for *query*.
 
         Args:
@@ -175,7 +174,7 @@ class DSPyRetriever:
         """
         return self._get_relevant_documents(query)
 
-    def _get_relevant_documents(self, query: str, **kwargs: Any) -> List[Any]:
+    def _get_relevant_documents(self, query: str, **kwargs: Any) -> list[Any]:
         from langchain_core.documents import Document
 
         prediction = self._dspy_retrieve(query)
@@ -188,7 +187,7 @@ class DSPyRetriever:
             for p in passages
         ]
 
-    async def ainvoke(self, query: str, **kwargs: Any) -> List[Any]:
+    async def ainvoke(self, query: str, **kwargs: Any) -> list[Any]:
         """Async retrieval — wraps the synchronous DSPy call in an executor.
 
         Args:
@@ -200,10 +199,10 @@ class DSPyRetriever:
         loop = asyncio.get_event_loop()
         return await loop.run_in_executor(None, self._get_relevant_documents, query)
 
-    async def _aget_relevant_documents(self, query: str, **kwargs: Any) -> List[Any]:
+    async def _aget_relevant_documents(self, query: str, **kwargs: Any) -> list[Any]:
         return await self.ainvoke(query)
 
-    def get_relevant_documents(self, query: str, **kwargs: Any) -> List[Any]:
+    def get_relevant_documents(self, query: str, **kwargs: Any) -> list[Any]:
         """LangChain legacy retriever interface."""
         return self._get_relevant_documents(query)
 

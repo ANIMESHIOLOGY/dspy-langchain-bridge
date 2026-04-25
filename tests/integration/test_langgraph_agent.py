@@ -11,7 +11,7 @@ import pytest
 
 @pytest.mark.slow
 @pytest.mark.integration
-def test_langgraph_agent_with_dspy_tool():
+def test_langgraph_agent_with_dspy_tool() -> None:
     """LangGraph agent that uses a DSPy ChainOfThought module as a tool."""
     pytest.importorskip("langgraph")
 
@@ -48,7 +48,7 @@ def test_langgraph_agent_with_dspy_tool():
 
 @pytest.mark.slow
 @pytest.mark.integration
-def test_dspy_module_as_langgraph_tool():
+def test_dspy_module_as_langgraph_tool() -> None:
     """DSPy module used as a LangChain tool inside a LangGraph ReAct agent."""
     pytest.importorskip("langgraph")
 
