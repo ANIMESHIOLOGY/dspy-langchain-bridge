@@ -2,11 +2,10 @@
 
 > A production-grade compatibility bridge between [DSPy](https://github.com/stanfordnlp/dspy) and [LangChain](https://github.com/langchain-ai/langchain).
 
-[![PyPI version](https://badge.fury.io/py/dspy-langchain-bridge.svg)](https://pypi.org/project/dspy-langchain-bridge/)
-[![CI](https://github.com/ANIMESHIOLOGY/dspy-langchain-bridge/actions/workflows/ci.yml/badge.svg)](https://github.com/ANIMESHIOLOGY/dspy-langchain-bridge/actions/workflows/ci.yml)
-[![Coverage](https://codecov.io/gh/ANIMESHIOLOGY/dspy-langchain-bridge/branch/main/graph/badge.svg)](https://codecov.io/gh/ANIMESHIOLOGY/dspy-langchain-bridge)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![DSPy](https://img.shields.io/badge/DSPy-2.x%2F3.x-orange.svg)](https://github.com/stanfordnlp/dspy)
+[![LangChain](https://img.shields.io/badge/LangChain-0.2%2B-green.svg)](https://github.com/langchain-ai/langchain)
 
 ---
 
