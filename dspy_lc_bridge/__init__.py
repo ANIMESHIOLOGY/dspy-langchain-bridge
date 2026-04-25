@@ -51,7 +51,7 @@ from dspy_lc_bridge.signatures import (
 )
 from dspy_lc_bridge.tools import DSPyNode, DSPyTool, LangChainTool
 
-__version__ = "0.1.0"
+__version__ = "0.4.0"
 
 __all__ = [
     # Core

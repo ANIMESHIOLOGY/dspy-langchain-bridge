@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dspy-langchain-bridge"
-version = "0.1.0"
+version = "0.4.0"
 description = "A compatibility bridge between DSPy and LangChain — use DSPy optimizers inside LangChain pipelines and LangChain tools inside DSPy modules."
 authors = [{ name = "Animesh" }]
 license = { file = "LICENSE" }

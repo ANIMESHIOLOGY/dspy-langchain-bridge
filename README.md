@@ -2,6 +2,8 @@
 
 > A production-grade compatibility bridge between [DSPy](https://github.com/stanfordnlp/dspy) and [LangChain](https://github.com/langchain-ai/langchain).
 
+[![PyPI version](https://badge.fury.io/py/dspy-langchain-bridge.svg)](https://pypi.org/project/dspy-langchain-bridge/)
+[![CI](https://github.com/ANIMESHIOLOGY/dspy-langchain-bridge/actions/workflows/ci.yml/badge.svg)](https://github.com/ANIMESHIOLOGY/dspy-langchain-bridge/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![DSPy](https://img.shields.io/badge/DSPy-2.x%2F3.x-orange.svg)](https://github.com/stanfordnlp/dspy)
@@ -150,13 +152,13 @@ from dspy_lc_bridge import (
 
 ## Roadmap
 
-| Version | Contents |
-|---------|----------|
-| `v0.1.0` | Core bridge: `DSPyRunnable`, `LangChainLM`, signature converters |
-| `v0.2.0` | Retriever & memory bridges |
-| `v0.3.0` | Agent & tool interop + LangGraph bridges |
-| `v0.4.0` | Optimizer bridge |
-| `v1.0.0` | Stable release, full docs, streaming, mypy compliance |
+| Version | Contents | Status |
+|---------|----------|--------|
+| `v0.1.0` | Core bridge: `DSPyRunnable`, `LangChainLM`, signature converters | ✅ Released |
+| `v0.2.0` | Retriever & memory bridges | ✅ Released |
+| `v0.3.0` | Agent & tool interop + LangGraph bridges | ✅ Released |
+| `v0.4.0` | Optimizer bridge | ✅ Released |
+| `v1.0.0` | Stable release, full docs, streaming, mypy compliance | 🔜 Planned |
 
 ---
 
